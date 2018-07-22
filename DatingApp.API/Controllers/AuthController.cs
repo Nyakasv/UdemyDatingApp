@@ -1,25 +1,25 @@
+using System;
 using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
 using System.Threading.Tasks;
+using AutoMapper;
 using DatingApp.API.Data;
 using DatingApp.API.Dtos;
 using DatingApp.API.Models;
 using Microsoft.AspNetCore.Mvc;
-using System.Text;
-using Microsoft.IdentityModel.Tokens;
-using System.Security.Claims;
-using System;
 using Microsoft.Extensions.Configuration;
-using AutoMapper;
+using Microsoft.IdentityModel.Tokens;
 
 namespace DatingApp.API.Controllers
 {
     [Route("api/[controller]")]
-    public class AuthController : Controller
+    [ApiController]
+    public class AuthController : ControllerBase
     {
         private readonly IAuthRepository _repo;
         private readonly IConfiguration _config;
         private readonly IMapper _mapper;
-
         public AuthController(IAuthRepository repo, IConfiguration config, IMapper mapper)
         {
             _mapper = mapper;
