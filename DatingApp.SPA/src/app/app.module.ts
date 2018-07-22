@@ -14,7 +14,7 @@ import { NavComponent } from './nav/nav.component';
 import { AuthService } from './_services/auth.service';
 import { HomeComponent } from './home/home.component';
 import { RegisterComponent } from './register/register.component';
-
+import { ErrorInterceptorProvider } from './_services/error.interceptor';
 import { AlertifyService } from './_services/alertify.service';
 import { MemberListComponent } from './members/member-list/member-list.component';
 import { ListsComponent } from './lists/lists.component';
@@ -28,9 +28,8 @@ import { MemberDetailResolver } from './_resolvers/member-detail.resolver';
 import { MemberListResolver } from './_resolvers/member-list.resolver';
 import { MemberEditComponent } from './members/member-edit/member-edit.component';
 import { MemberEditResolver } from './_resolvers/member-edit.resolver';
-
+import { PreventUnsavedChanges } from './_guards/prevent-unsaved-changes.guard';
 import { PhotoEditorComponent } from './members/photo-editor/photo-editor.component';
-import { PreventUnsavedChanges } from './_guards/prevent-unsaved-changes.guards';
 
 export function tokenGetter() {
   return localStorage.getItem('token');
@@ -72,6 +71,7 @@ export function tokenGetter() {
   ],
   providers: [
       AuthService,
+      ErrorInterceptorProvider,
       AlertifyService,
       AuthGuard,
       UserService,

@@ -1,10 +1,10 @@
-import { Router, NavigationEnd } from '@angular/router';
-import { User } from './../_models/User';
-import { AuthService } from './../_services/auth.service';
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { AuthService } from '../_services/auth.service';
 import { AlertifyService } from '../_services/alertify.service';
-import { FormGroup, FormControl, Validators, FormBuilder } from '../../../node_modules/@angular/forms';
-import { BsDatepickerConfig } from '../../../node_modules/ngx-bootstrap';
+import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms';
+import { BsDatepickerConfig } from 'ngx-bootstrap';
+import { User } from '../_models/user';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-register',
@@ -17,10 +17,8 @@ export class RegisterComponent implements OnInit {
   registerForm: FormGroup;
   bsConfig: Partial<BsDatepickerConfig>;
 
-  constructor(private authService: AuthService,
-    private alertify: AlertifyService,
-    private formBuilder: FormBuilder,
-    private router: Router) { }
+  constructor(private authService: AuthService, private router: Router,
+    private alertify: AlertifyService, private fb: FormBuilder) { }
 
   ngOnInit() {
     this.bsConfig = {
@@ -30,7 +28,7 @@ export class RegisterComponent implements OnInit {
   }
 
   createRegisterForm() {
-    this.registerForm = this.formBuilder.group({
+    this.registerForm = this.fb.group({
       gender: ['male'],
       username: ['', Validators.required],
       knownAs: ['', Validators.required],
@@ -39,18 +37,18 @@ export class RegisterComponent implements OnInit {
       country: ['', Validators.required],
       password: ['', [Validators.required, Validators.minLength(4), Validators.maxLength(8)]],
       confirmPassword: ['', Validators.required]
-    }, {validator : this.passwordValidator});
+    }, {validator: this.passwordMatchValidator});
   }
 
-  passwordValidator(g: FormGroup) {
-    return g.get('password').value === g.get('confirmPassword').value ? null : {'mismatch' : true};
+  passwordMatchValidator(g: FormGroup) {
+    return g.get('password').value === g.get('confirmPassword').value ? null : {'mismatch': true};
   }
 
   register() {
     if (this.registerForm.valid) {
       this.user = Object.assign({}, this.registerForm.value);
       this.authService.register(this.user).subscribe(() => {
-        this.alertify.success('sikeres regisztráció');
+        this.alertify.success('Registration successful');
       }, error => {
         this.alertify.error(error);
       }, () => {
@@ -59,8 +57,6 @@ export class RegisterComponent implements OnInit {
         });
       });
     }
-
-    // console.log(this.registerForm.value);
   }
 
   cancel() {

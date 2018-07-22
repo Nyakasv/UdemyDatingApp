@@ -1,22 +1,23 @@
-import { Observable } from 'rxjs/Observable';
-import { Resolve, Router, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
-import { User } from '../_models/User';
-import { Injectable } from '../../../node_modules/@angular/core';
+import {Injectable} from '@angular/core';
+import {User} from '../_models/user';
+import {Resolve, Router, ActivatedRouteSnapshot} from '@angular/router';
 import { UserService } from '../_services/user.service';
 import { AlertifyService } from '../_services/alertify.service';
-
-import 'rxjs/add/observable/of';
-import 'rxjs/add/operator/catch';
+import { Observable, of } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 
 @Injectable()
 export class MemberListResolver implements Resolve<User[]> {
-    constructor(private userService: UserService, private router: Router, private alertify: AlertifyService) {}
+    constructor(private userService: UserService, private router: Router,
+        private alertify: AlertifyService) {}
 
     resolve(route: ActivatedRouteSnapshot): Observable<User[]> {
-        return this.userService.getUsers().catch(error => {
-            this.alertify.error('Problem retreieving data');
-            this.router.navigate(['/members']);
-            return Observable.of(null);
-        });
+        return this.userService.getUsers().pipe(
+            catchError(error => {
+                this.alertify.error('Problem retrieving data');
+                this.router.navigate(['/home']);
+                return of(null);
+            })
+        );
     }
 }
