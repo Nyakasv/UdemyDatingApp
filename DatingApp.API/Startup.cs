@@ -62,7 +62,7 @@ namespace DatingApp.API
             services.AddScoped<LogUserActivity>();
         }
 
-        public void ConfigureDevelopmentServices(IServiceCollection services)
+      public void ConfigureDevelopmentServices(IServiceCollection services)
         {
             services.AddDbContext<DataContext>(x => x.UseSqlite(Configuration.GetConnectionString("DefaultConnection")));
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1)
