@@ -4,6 +4,8 @@ using Newtonsoft.Json;
 
 namespace DatingApp.API.Data
 {
+    // This class is responible for sseding the database from UserSeedData.json
+    // To start the seeding process remove the comment mark at the end of Startup.cs //seeder.SeedUsers();
     public class Seed
     {
         private readonly DataContext _context;

@@ -54,6 +54,7 @@ namespace DatingApp.API.Controllers
         public async Task<IActionResult> AddPhotoForUser(int userId,
             [FromForm]PhotoForCreationDto photoForCreationDto)
         {
+            // check if the user is authorized
             if (userId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
                 return Unauthorized();
 
@@ -67,6 +68,7 @@ namespace DatingApp.API.Controllers
             {
                 using (var stream = file.OpenReadStream())
                 {
+                    // set cloudinary upload parameters
                     var uploadParams = new ImageUploadParams()
                     {
                         File = new FileDescription(file.Name, stream),
@@ -100,6 +102,7 @@ namespace DatingApp.API.Controllers
         [HttpPost("{id}/setMain")]
         public async Task<IActionResult> SetMainPhoto(int userId, int id)
         {
+            // check if the user is authorized
             if (userId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
                 return Unauthorized();
 
@@ -127,6 +130,7 @@ namespace DatingApp.API.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeletePhoto(int userId, int id)
         {
+            // check if the user is authorized
             if (userId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
                 return Unauthorized();
 
@@ -137,9 +141,11 @@ namespace DatingApp.API.Controllers
 
             var photoFromRepo = await _repo.GetPhoto(id);
 
+            // check if it is the main photo
             if (photoFromRepo.IsMain)
                 return BadRequest("You cannot delete your main photo");
-
+            
+            // delet cloudinary photo
             if (photoFromRepo.PublicId != null)
             {
                 var deleteParams = new DeletionParams(photoFromRepo.PublicId);
@@ -152,6 +158,7 @@ namespace DatingApp.API.Controllers
                 }
             }
 
+            // delet database photo
             if (photoFromRepo.PublicId == null)
             {
                 _repo.Delete(photoFromRepo);

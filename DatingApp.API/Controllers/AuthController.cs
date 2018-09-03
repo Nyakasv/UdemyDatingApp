@@ -63,6 +63,7 @@ namespace DatingApp.API.Controllers
 
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
 
+            // set token descripton
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(claims),
@@ -72,6 +73,7 @@ namespace DatingApp.API.Controllers
 
             var tokenHandler = new JwtSecurityTokenHandler();
 
+            // create token
             var token = tokenHandler.CreateToken(tokenDescriptor);
 
             var user = _mapper.Map<UserForListDto>(userFromRepo);
